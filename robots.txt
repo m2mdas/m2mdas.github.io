@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://m2mdas.github.io/sitemap.xml 
