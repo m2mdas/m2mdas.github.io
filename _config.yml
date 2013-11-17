@@ -50,7 +50,7 @@ titlecase: true       # Converts page and post titles to titlecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html]
+default_asides: [asides/recent_posts.html, asides/stackoverflow.html, asides/github.html]
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
@@ -72,6 +72,9 @@ github_skip_forks: true
 twitter_user: m2mdas
 twitter_tweet_button: true
 
+# Stack Overlfow: add your user name and user id (the user id is visible in the url of your s.o. profile page)
+stackoverflow_user_name: m2mdas
+stackoverflow_user_id: 1218997
 # Google +1
 google_plus_one: false
 google_plus_one_size: medium
