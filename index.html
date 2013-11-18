@@ -9,9 +9,9 @@
   <meta name="author" content="Mun Mun Das">
 
   
-  <meta name="description" content="
-">
-  
+  <meta name="description" content="SonataUserBundle is a great extension of SonataAdminBundle that provides user administration features by integrating FOSUserBundle user provider/ &hellip;">
+  <meta name="keywords" content="PHP, Symfony, Laravel, Javascript">
+
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -106,7 +106,317 @@
   </header>
 
 
-  <div class="entry-content">
+  <div class="entry-content"><p><a href="https://github.com/sonata-project/SonataUserBundle">SonataUserBundle</a> is a great extension of <a href="https://github.com/sonata-project/SonataAdminBundle">SonataAdminBundle</a> that provides user administration features by integrating <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a> user provider/management bundle. Its <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Resources/doc/reference/installation.rst#installation">default installation procedure</a> recommends to setup <code>SonataUserBundle</code> as child bundle of <code>FOSUserBundle</code> and generate <code>ApplicationSonataUserBundle</code> via <code>sonata:easy-extends:generate</code> command. But on some cases you may not want to setup that way. For example you have setup your user entity by following the documentation of <code>FOSUserBundle</code> before integrating <code>SonataAdminBundle</code> and <code>SonataUserBundle</code>, you may want to override both bundles separately.  In following section I will outline how to integrate <code>SonataUserBundle</code> with <code>FOSUserBundle</code> without creating child bundle of <code>FOSUserBundle</code>.</p>
+
+<p>Default installation and setup of <code>FOSUserBundle</code> is same as <a href="https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md#getting-started-with-fosuserbundle">stated in default documentation</a>. Then install and setup <code>SonataAdminBundle</code> <a href="http://sonata-project.org/bundles/admin/master/doc/index.html#reference-guide">according to its documentation</a>. Both guides are pretty well documented. So I will not duplicate them here.</p>
+
+<p>Now setup <code>SonataUserBundle</code>. Add it to <code>composer.json</code> and add following line into <code>registerBundle</code> method of <code>app/AppKernel.php</code></p>
+
+<figure class='code'><figcaption><span>app/AppKernel.php </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">// app/AppKernel.php</span>
+</span><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">registerBundles</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nv">$bundles</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="c1">// other bundle declarations</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nx">Sonata\UserBundle\SonataUserBundle</span><span class="p">(),</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then setup configuration, add routing and security configuration according to <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Resources/doc/reference/installation.rst#configuration">the documentation</a>.</p>
+
+<p>Now set value of <code>sonata.user.admin.user.class</code> parameter to the FQCN of the User entity which was created during <code>FOSUserBundle</code> setup. For example if FQCN of your user entity is <code>YourVendor\YourBundle\Entity\User</code> then parameter setting of <code>app/config.yml</code> would be</p>
+
+<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">parameters</span><span class="p">:</span>
+</span><span class='line'>    <span class="c1">#....</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">entity</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Entity</span><span class="p">\</span><span class="no">User</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now create a class that extends default <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Admin/Model/UserAdmin.php">UserAdmin</a> class and override <code>configureShowFields</code>, <code>configureFormFields</code>, <code>configureDatagridFilters</code> and <code>configureListFields</code> methods to add the needed user admin fields. Following is the sample extended <code>UserAdmin</code> class which is based on the bare bone user entity created in <code>FOSUserBundle</code> documentation.</p>
+
+<figure class='code'><figcaption><span>src/YourVendor/YourBundle/Admin/UserAdmin.php  </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="c1">//src/YourVendor/YourBundle/Admin/UserAdmin.php</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="nx">YourVendor\YourBundle\Admin</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\UserBundle\Admin\Model\UserAdmin</span> <span class="k">as</span> <span class="nx">BaseUserAdmin</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Form\FormMapper</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Datagrid\DatagridMapper</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Datagrid\ListMapper</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Show\ShowMapper</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">FOS\UserBundle\Model\UserManagerInterface</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Route\RouteCollection</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserAdmin</span> <span class="k">extends</span> <span class="nx">BaseUserAdmin</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureShowFields</span><span class="p">(</span><span class="nx">ShowMapper</span> <span class="nv">$showMapper</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$showMapper</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;General&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
+</span><span class='line'>            <span class="c1">// .. more info</span>
+</span><span class='line'>        <span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureFormFields</span><span class="p">(</span><span class="nx">FormMapper</span> <span class="nv">$formMapper</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nv">$formMapper</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;General&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;plainPassword&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
+</span><span class='line'>            <span class="c1">// .. more info</span>
+</span><span class='line'>            <span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getSubject</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasRole</span><span class="p">(</span><span class="s1">&#39;ROLE_SUPER_ADMIN&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$formMapper</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;Management&#39;</span><span class="p">)</span>
+</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">,</span> <span class="s1">&#39;sonata_security_roles&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>                        <span class="s1">&#39;expanded&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;multiple&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span>
+</span><span class='line'>                    <span class="p">))</span>
+</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
+</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;expired&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
+</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
+</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;credentialsExpired&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
+</span><span class='line'>            <span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureDatagridFilters</span><span class="p">(</span><span class="nx">DatagridMapper</span> <span class="nv">$filterMapper</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$filterMapper</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureListFields</span><span class="p">(</span><span class="nx">ListMapper</span> <span class="nv">$listMapper</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$listMapper</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">addIdentifier</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;editable&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">))</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;editable&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">))</span>
+</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;createdAt&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isGranted</span><span class="p">(</span><span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$listMapper</span>
+</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;impersonating&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;template&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;SonataUserBundle:Admin:Field/impersonating.html.twig&#39;</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now set the value of <code>sonata.user.admin.user.class</code> to the FQCN of the created <code>UserAdmin</code> class in <code>app/config/config.yml</code>, e.g</p>
+
+<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">parameters</span><span class="p">:</span>
+</span><span class='line'>    <span class="c1"># ...</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">class</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Admin</span><span class="p">\</span><span class="no">UserAdmin</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># ....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you don&rsquo;t need user group functionality you can disable it. e.g in your <code>app/config/config.yml</code> add following lines.</p>
+
+<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">services</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+</span><span class='line'>        <span class="ss">abstract</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>        <span class="kp">public</span><span class="p">:</span> <span class="kp">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Combined <code>config.yml</code> setting given bellow,</p>
+
+<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#...</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">parameters</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">class</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Admin</span><span class="p">\</span><span class="no">UserAdmin</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">entity</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Entity</span><span class="p">\</span><span class="no">User</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">services</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+</span><span class='line'>        <span class="ss">abstract</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>        <span class="kp">public</span><span class="p">:</span> <span class="kp">false</span>
+</span><span class='line'><span class="c1">#...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If everything setup correctly you will see an new users row in <code>admin/dashboard</code> page. All user operations should work as expected. Thats all for now.</p>
 </div>
   
   
