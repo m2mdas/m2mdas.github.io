@@ -4,7 +4,8 @@ title: "Integrate FOSUserBundle and SonataUserBundle easily"
 date: 2013-11-18 05:41
 comments: true
 categories: [PHP, Symfony, FOSUserBundle, SonataUserBundle, SonataAdminBundle]
-keywords: PHP, Symfony2, FOSUserBundle, SonataUserBundle, FOSUserBundle + SonataUserBundle, integrate FOSUserBundle with SonataUserBundle, SonataAdminBundle, SonataUserBundle, Setup, integrating, configuration, install
+description: Easy way to integrate FOSUserBundle with SonataUserBundle Symfony2 bundles
+keywords: PHP, Symfony2, FOSUserBundle, SonataUserBundle, FOSUserBundle + SonataUserBundle, integrate FOSUserBundle with SonataUserBundle, SonataAdminBundle, SonataUserBundle, Setup, integrating, configuration, install, Easy
 ---
 [SonataUserBundle](https://github.com/sonata-project/SonataUserBundle) is a great extension of [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle) that provides user administration features by integrating [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle) user provider/management bundle. Its [default installation procedure](https://github.com/sonata-project/SonataUserBundle/blob/master/Resources/doc/reference/installation.rst#installation) recommends to setup `SonataUserBundle` as child bundle of `FOSUserBundle` and generate `ApplicationSonataUserBundle` via `sonata:easy-extends:generate` command. But on some cases you may not want to setup that way. For example you have setup your user entity by following the documentation of `FOSUserBundle` before integrating `SonataAdminBundle` and `SonataUserBundle`, you may want to override both bundles separately.  In following section I will outline how to integrate `SonataUserBundle` with `FOSUserBundle` without creating child bundle of `FOSUserBundle`.
 
