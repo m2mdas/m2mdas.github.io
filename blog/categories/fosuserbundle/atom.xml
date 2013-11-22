@@ -4,7 +4,7 @@
   <title><![CDATA[Category: FOSUserBundle | ]]></title>
   <link href="http://m2mdas.github.io/blog/categories/fosuserbundle/atom.xml" rel="self"/>
   <link href="http://m2mdas.github.io/"/>
-  <updated>2013-11-22T15:22:34+06:00</updated>
+  <updated>2013-11-22T15:24:24+06:00</updated>
   <id>http://m2mdas.github.io/</id>
   <author>
     <name><![CDATA[Mun Mun Das]]></name>
@@ -577,17 +577,7 @@
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>YourController.php </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;/</span><span class="nx">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nv">$accessToken</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;security.context&#39;</span><span class="p">)</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">getToken</span><span class="p">()</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">getAccessToken</span><span class="p">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="nx">code</span><span class="o">&gt;&lt;/</span><span class="nx">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$accessToken</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">security</span><span class="o">.</span><span class="nx">context</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;)</span><span class="o">&amp;</span><span class="nx">ndash</span><span class="p">;</span><span class="o">&gt;</span><span class="nx">getToken</span><span class="p">()</span><span class="o">&amp;</span><span class="nx">ndash</span><span class="p">;</span><span class="o">&gt;</span><span class="nx">getAccessToken</span><span class="p">();</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>will give you the access token with which you can do REST API call to the resource.</p>
