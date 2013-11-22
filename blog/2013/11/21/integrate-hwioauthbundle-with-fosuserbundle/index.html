@@ -105,7 +105,7 @@
 
 <div class="entry-content"><p><a href="https://github.com/hwi/HWIOAuthBundle">HWIOAuthBundle</a> is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can add infinite amount of web services as authentication source.</p>
 
-<p>After user authentication it is better to fetch user information from the web service and store them in so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure <code>HWIOAuthBundle</code> and integrate <code>FOSUserBundle</code> user provider using <code>fosub_bridge</code> implemented in <code>HWIOauthBundle</code>. For web service Github OAuth api used.</p>
+<p>After user authentication it is better to fetch user information from the web service and store them in DB so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure <code>HWIOAuthBundle</code> and integrate <code>FOSUserBundle</code> user provider using <code>fosub_bridge</code> implemented in <code>HWIOauthBundle</code>. For web service Github OAuth api used.</p>
 
 <p><code>HWIOAuthBundle</code> uses <a href="https://github.com/kriswallsmith/Buzz">Buzz</a> curl client to communicate with web services. <code>Buzz</code> by default enables SSL certificate check. On some server CA certificate information may not exist. To add CA certificate info download  <code>cacert.pem</code> from <a href="http://curl.haxx.se/docs/caextract.html">this</a> page and set <code>curl.cainfo</code> php ini variable to the location of <code>cacert.pem</code> e.g</p>
 
