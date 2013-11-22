@@ -9,7 +9,7 @@
   <meta name="author" content="Mun Mun Das">
 
   
-  <meta name="description" content="SonataUserBundle is a great extension of SonataAdminBundle that provides user administration features by integrating FOSUserBundle user provider/ &hellip;">
+  <meta name="description" content="HWIOAuthBundle is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication &hellip;">
   <meta name="keywords" content="PHP, Symfony, Laravel, Javascript">
 
 
@@ -77,6 +77,488 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/">Integrate HWIOAuthBundle With FOSUserBundle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-21T20:22:00+06:00" pubdate data-updated="true">Nov 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/hwi/HWIOAuthBundle">HWIOAuthBundle</a> is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can configured you can add infinite amount of web services as authentication source.</p>
+
+<p>After user authentication it is better to fetch user information from the web service and store them to local DB to add profile information so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure <code>HWIOAuthBundle</code> and integrate <code>FOSUserBundle</code> user provider using <code>fosub_bridge</code> implemented in <code>HWIOauthBundle</code>. For web service Github OAuth api used.</p>
+
+<p><code>HWIOAuthBundle</code> uses <a href="https://github.com/kriswallsmith/Buzz">Buzz</a> curl client to communicate with web services. <code>Buzz</code> by default enables SSL certificate check. On some server CA certificate information may not exist. To add CA certificate info download  <code>cacert.pem</code> from <a href="http://curl.haxx.se/docs/caextract.html">this</a> page and set <code>curl.cainfo</code> php ini variable to the location of <code>cacert.pem</code> e.g</p>
+
+<figure class='code'><figcaption><span>php.ini </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">curl.cainfo</span> <span class="o">=</span> <span class="s">/path/to/cacert.pem</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then register application of the web service you want to use for authentication. For this post I have used Github for its simplicity. You can create application from <a href="https://github.com/settings/applications/new">here</a>. Your registration form may look like following,</p>
+
+<p><img src="http://i.imgur.com/bfOhYma.png?2"></p>
+
+<p>After successful application creation you will be redirected to application page where will see <code>client ID</code> and <code>Client Secret</code> fields set for the application. They will be used later.</p>
+
+<p>Add the bundle info in <code>composer.json</code> and issue <code>php composer.phar update --prefer-dist</code> command.</p>
+
+<figure class='code'><figcaption><span>composer.json </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nx">require</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//...</span>
+</span><span class='line'>        <span class="s2">&quot;friendsofsymfony/user-bundle&quot;</span><span class="o">:</span> <span class="s2">&quot;v1.3.2&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;hwi/oauth-bundle&quot;</span><span class="o">:</span> <span class="s2">&quot;0.3.*@dev&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enable the bundles in <code>app/AppKernel.php</code>,</p>
+
+<figure class='code'><figcaption><span>app/AppKernel.php  </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">registerBundles</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nv">$bundles</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nx">FOS\UserBundle\FOSUserBundle</span><span class="p">(),</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nx">HWI\Bundle\OAuthBundle\HWIOAuthBundle</span><span class="p">(),</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now setup <code>FOSUserBundle</code>. For this tutorial I will only show user entity creation and configuration. For other setup <a href="https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md">refer to the documentation</a>.</p>
+
+<p>In one  of your bundle add entity class with field information. After that add a entity field named <code>githubID</code> which maps to the github user id. Minimal entity class is given bellow.</p>
+
+<figure class='code'><figcaption><span>src/YourVendor/YourBundle/Entity/User.php </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="nx">YourVendor\YourBundle\Entity</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">FOS\UserBundle\Entity\User</span> <span class="k">as</span> <span class="nx">BaseUser</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Doctrine\ORM\Mapping</span> <span class="k">as</span> <span class="nx">ORM</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd"> * @ORM\Entity</span>
+</span><span class='line'><span class="sd"> * @ORM\Table(name=&quot;users&quot;)</span>
+</span><span class='line'><span class="sd"> */</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">BaseUser</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * @ORM\Id</span>
+</span><span class='line'><span class="sd">     * @ORM\Column(type=&quot;integer&quot;)</span>
+</span><span class='line'><span class="sd">     * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$id</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * @var string</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @ORM\Column(name=&quot;github_id&quot;, type=&quot;string&quot;, nullable=true)</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">private</span> <span class="nv">$githubID</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+</span><span class='line'>        <span class="c1">// your own logic</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Get id</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return integer </span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getId</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add routes of <code>FOSUserBundle</code> in <code>app/config/rouging.yml</code>. Please note that I am securing parts of the site that matches with <code>^/secure_area</code> url pattern. So appropriate prefix was added in this case. To apply it in root url just remove <code>/secure_area</code> portion in all  occurrences.</p>
+
+<figure class='code'><figcaption><span>app/config/routing.yml   </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">#...</span>
+</span><span class='line'><span class="nx">fos_user_security</span><span class="o">:</span>
+</span><span class='line'>    <span class="nx">resource</span><span class="o">:</span> <span class="s2">&quot;@FOSUserBundle/Resources/config/routing/security.xml&quot;</span>
+</span><span class='line'>    <span class="nx">prefix</span><span class="o">:</span> <span class="o">/</span><span class="nx">secure_area</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">fos_user_profile</span><span class="o">:</span>
+</span><span class='line'>    <span class="nx">resource</span><span class="o">:</span> <span class="s2">&quot;@FOSUserBundle/Resources/config/routing/profile.xml&quot;</span>
+</span><span class='line'>    <span class="nx">prefix</span><span class="o">:</span> <span class="o">/</span><span class="nx">secure_area</span><span class="o">/</span><span class="nx">profile</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">fos_user_register</span><span class="o">:</span>
+</span><span class='line'>    <span class="nx">resource</span><span class="o">:</span> <span class="s2">&quot;@FOSUserBundle/Resources/config/routing/registration.xml&quot;</span>
+</span><span class='line'>    <span class="nx">prefix</span><span class="o">:</span> <span class="o">/</span><span class="nx">secure_area</span><span class="o">/</span><span class="nx">register</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">fos_user_resetting</span><span class="o">:</span>
+</span><span class='line'>    <span class="nx">resource</span><span class="o">:</span> <span class="s2">&quot;@FOSUserBundle/Resources/config/routing/resetting.xml&quot;</span>
+</span><span class='line'>    <span class="nx">prefix</span><span class="o">:</span> <span class="o">/</span><span class="nx">secure_area</span><span class="o">/</span><span class="nx">resetting</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">fos_user_change_password</span><span class="o">:</span>
+</span><span class='line'>    <span class="nx">resource</span><span class="o">:</span> <span class="s2">&quot;@FOSUserBundle/Resources/config/routing/change_password.xml&quot;</span>
+</span><span class='line'>    <span class="nx">prefix</span><span class="o">:</span> <span class="o">/</span><span class="nx">secure_area</span><span class="o">/</span><span class="nx">profile</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add entity info in the <code>app/config/config.yml</code></p>
+
+<figure class='code'><figcaption><span>app/config/config.yml  </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#...</span>
+</span><span class='line'><span class="n">fos_user</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">db_driver</span><span class="p">:</span> <span class="n">orm</span> <span class="c1"># other valid values are &#39;mongodb&#39;, &#39;couchdb&#39; and &#39;propel&#39;</span>
+</span><span class='line'>    <span class="n">firewall_name</span><span class="p">:</span> <span class="n">secure_area</span>
+</span><span class='line'>    <span class="n">user_class</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Entity</span><span class="p">\</span><span class="no">User</span>
+</span><span class='line'>    <span class="ss">registration</span><span class="p">:</span>
+</span><span class='line'>        <span class="ss">confirmation</span><span class="p">:</span>
+</span><span class='line'>            <span class="ss">enabled</span><span class="p">:</span>    <span class="kp">false</span> <span class="c1"># change to true for required email confirmation</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in <code>app/config/security.yml</code> add <code>encoders</code> and <code>providers</code> information.</p>
+
+<figure class='code'><figcaption><span>app/config/security.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">security</span><span class="p">:</span>
+</span><span class='line'>    <span class="ss">encoders</span><span class="p">:</span>
+</span><span class='line'>        <span class="no">FOS</span><span class="p">\</span><span class="no">UserBundle</span><span class="p">\</span><span class="no">Model</span><span class="p">\</span><span class="ss">UserInterface</span><span class="p">:</span> <span class="n">sha512</span>
+</span><span class='line'>    <span class="ss">providers</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">fos_userbundle</span><span class="p">:</span>
+</span><span class='line'>            <span class="nb">id</span><span class="p">:</span> <span class="n">fos_user</span><span class="o">.</span><span class="n">user_provider</span><span class="o">.</span><span class="n">username</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now setup <code>HWIOauthBundle</code>. Add routes of <code>HWIOAuthBundle</code> to <code>app/config/routing.yml</code>.Another route named <code>hwi_github_login</code> was also added which is same as the callback url given during creation of Github application. This is the url which will be intercepted by the firewall to check authentication.</p>
+
+<figure class='code'><figcaption><span>app/config/routing.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">hwi_oauth_redirect</span><span class="p">:</span>
+</span><span class='line'>    <span class="ss">resource</span><span class="p">:</span> <span class="s2">&quot;@HWIOAuthBundle/Resources/config/routing/redirect.xml&quot;</span>
+</span><span class='line'>    <span class="ss">prefix</span><span class="p">:</span>   <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">hwi_oauth_login</span><span class="p">:</span>
+</span><span class='line'>    <span class="ss">resource</span><span class="p">:</span> <span class="s2">&quot;@HWIOAuthBundle/Resources/config/routing/login.xml&quot;</span>
+</span><span class='line'>    <span class="ss">prefix</span><span class="p">:</span>   <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">hwi_oauth_connect</span><span class="p">:</span>
+</span><span class='line'>    <span class="ss">resource</span><span class="p">:</span> <span class="s2">&quot;@HWIOAuthBundle/Resources/config/routing/connect.xml&quot;</span>
+</span><span class='line'>    <span class="ss">prefix</span><span class="p">:</span>   <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">hwi_github_login</span><span class="p">:</span>
+</span><span class='line'>    <span class="ss">pattern</span><span class="p">:</span> <span class="sr">/secure_area/</span><span class="n">login</span><span class="o">/</span><span class="n">check</span><span class="o">-</span><span class="n">github</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now setup the security firewall.</p>
+
+<figure class='code'><figcaption><span>app/config/security.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">security</span><span class="p">:</span>
+</span><span class='line'>    <span class="c1">#...</span>
+</span><span class='line'>    <span class="ss">firewalls</span><span class="p">:</span>
+</span><span class='line'>        <span class="c1">#...</span>
+</span><span class='line'>        <span class="n">secure_area</span><span class="p">:</span>
+</span><span class='line'>            <span class="ss">pattern</span><span class="p">:</span> <span class="o">^/</span><span class="n">secure_area</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="ss">oauth</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">failure_path</span><span class="p">:</span> <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>                <span class="n">login_path</span><span class="p">:</span> <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>                <span class="n">check_path</span><span class="p">:</span> <span class="sr">/secure_area/</span><span class="n">connect</span>
+</span><span class='line'>                <span class="ss">provider</span><span class="p">:</span> <span class="n">fos_userbundle</span>
+</span><span class='line'>                <span class="n">resource_owners</span><span class="p">:</span>
+</span><span class='line'>                    <span class="ss">github</span><span class="p">:</span>           <span class="s2">&quot;/secure_area/login/check-github&quot;</span>
+</span><span class='line'>                <span class="n">oauth_user_provider</span><span class="p">:</span>
+</span><span class='line'>                    <span class="ss">service</span><span class="p">:</span> <span class="n">hwi_oauth</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">fosub_bridge</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="ss">anonymous</span><span class="p">:</span>    <span class="kp">true</span>
+</span><span class='line'>            <span class="ss">logout</span><span class="p">:</span>
+</span><span class='line'>                <span class="ss">path</span><span class="p">:</span>           <span class="sr">/secure_area/</span><span class="n">logout</span>
+</span><span class='line'>                <span class="ss">target</span><span class="p">:</span>         <span class="sr">/secure_area/</span><span class="n">connect</span> <span class="c1">#where to go after logout</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">#...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">access_control</span><span class="p">:</span>
+</span><span class='line'>        <span class="c1">#....</span>
+</span><span class='line'>        <span class="o">-</span> <span class="p">{</span> <span class="ss">path</span><span class="p">:</span> <span class="o">^/</span><span class="n">secure_area</span><span class="o">/</span><span class="n">login</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="no">IS_AUTHENTICATED_ANONYMOUSLY</span> <span class="p">}</span>
+</span><span class='line'>        <span class="o">-</span> <span class="p">{</span> <span class="ss">path</span><span class="p">:</span> <span class="o">^/</span><span class="n">secure_area</span><span class="o">/</span><span class="n">connect</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="no">IS_AUTHENTICATED_ANONYMOUSLY</span> <span class="p">}</span>
+</span><span class='line'>        <span class="o">-</span> <span class="p">{</span> <span class="ss">path</span><span class="p">:</span> <span class="o">^/</span><span class="n">secure_area</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="no">ROLE_USER</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In <code>firewalls</code> section a new firewall named <code>secure_area</code> with OAuth provider named <code>oauth</code> is added which handles <code>^/secure_area</code> url pattern. In <code>resource_owners</code> section of the OAuth provider intercept url for the Github resource owner is provided. It is same as the callback url given during Github application creation.</p>
+
+<p>In later <code>access_control</code> section path matching <code>^/secure_area/connect</code> and <code>^/secure_area/login</code> pattern moved out of secure area.</p>
+
+<p>User provider of the OAuth authentication provider is <code>fos_userbundle</code> which was setup previously. As user provider is <code>FOSUserBundle</code>, built-in <code>hwi_oauth.user.provider.fosub_bridge</code> service was set as <code>oauth_user_provider</code>. If you want to set it to your custom user provider you have to implement <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Security/Core/User/OAuthAwareUserProviderInterface.php">OAuthAwareUserProviderInterface</a>.</p>
+
+<p>Now setup <code>app/config/config.yml</code>.</p>
+
+<figure class='code'><figcaption><span>app/config/config.yml   </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#...</span>
+</span><span class='line'><span class="n">hwi_oauth</span><span class="p">:</span>
+</span><span class='line'>    <span class="c1"># name of the firewall in which this bundle is active, this setting MUST be set</span>
+</span><span class='line'>    <span class="n">firewall_name</span><span class="p">:</span> <span class="n">secure_area</span>
+</span><span class='line'>    <span class="ss">connect</span><span class="p">:</span>
+</span><span class='line'>        <span class="ss">confirmation</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>        <span class="c1">#account_connector: hwi_oauth.user.provider.fosub_bridge</span>
+</span><span class='line'>        <span class="c1">#registration_form_handler: hwi_oauth.registration.form.handler.fosub_bridge</span>
+</span><span class='line'>        <span class="c1">#registration_form: fos_user.registration.form</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">resource_owners</span><span class="p">:</span>
+</span><span class='line'>        <span class="ss">github</span><span class="p">:</span>
+</span><span class='line'>            <span class="ss">type</span><span class="p">:</span>                <span class="n">github</span>
+</span><span class='line'>            <span class="n">client_id</span><span class="p">:</span>           <span class="o">&lt;</span><span class="n">client_id</span><span class="o">&gt;</span>
+</span><span class='line'>            <span class="n">client_secret</span><span class="p">:</span>       <span class="o">&lt;</span><span class="n">client_secret</span><span class="o">&gt;</span>
+</span><span class='line'>            <span class="ss">scope</span><span class="p">:</span>               <span class="s2">&quot;user:email&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="ss">fosub</span><span class="p">:</span>
+</span><span class='line'>        <span class="c1"># try 30 times to check if a username is available (foo, foo1, foo2 etc)</span>
+</span><span class='line'>        <span class="n">username_iterations</span><span class="p">:</span> <span class="mi">30</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1"># mapping between resource owners (see below) and properties</span>
+</span><span class='line'>        <span class="ss">properties</span><span class="p">:</span>
+</span><span class='line'>            <span class="ss">github</span><span class="p">:</span> <span class="n">githubID</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The value of <code>firewall_name</code> is same as the name of the firewall with OAuth provider setup in <code>app/config/security.yml</code>.</p>
+
+<p>In <code>resource_owners</code> section OAuth information were added. The value of <code>client_id</code> and <code>client_secret</code> are the values set by Github after the creation of the application. For configuration of other resource owners <a href="https://github.com/hwi/HWIOAuthBundle/tree/master/Resources/doc/resource_owners">see the documentation</a>.</p>
+
+<p>Since <code>FOSUserBundle</code> were used as user provider, <code>fosub</code> section were added. In <code>properties</code> section <code>githubID</code> entity field was set as value of <code>github</code> config field.</p>
+
+<p>The <code>connect</code> section connects <code>HWIOAuthBundle</code> to the registration system of Symfony. It also links existing logged in users to the authenticated service. Note that simply adding <code>connect: ~</code> would be enough to link <code>HWIOAuthBundle</code> to the registration system. For the brief explanation of the options I have added default values.</p>
+
+<p>If <code>confirmation</code> option is set to true, user will be shown a  page that will ask the user to connect the current authenticated resource to existing logged in user account. The template location is <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/views/Connect/connect_confirm.html.twig">HWIOAuthBundle:Connect:connect_confirm.html.twig</a>. To override the template <a href="http://symfony.com/doc/current/book/templating.html#overriding-bundle-templates">see the documentation</a>.</p>
+
+<p>The value of <code>account_connector</code> is a user provider class that implements <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Connect/AccountConnectorInterface.php">AccountConnectorInterFace</a>. By default it is set to same <code>hwi_oauth.user.provider.fosub_bridge</code> service that was set in OAuth firewall. So if you want to add support for your custom user provider you have to extend it so that it implements <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Connect/AccountConnectorInterface.php">AccountConnectorInterFace</a> and <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Security/Core/User/OAuthAwareUserProviderInterface.php">OAuthAwareUserProviderInterface</a>.</p>
+
+<p>The <code>registration_form_handler</code> is set to <code>hwi_oauth.registration.form.handler.fosub_bridge</code> service. It is used during registration process and does almost same thing as default <code>FOSUserBundle</code> registration form handler. The difference is that it implements <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Form/RegistrationFormHandlerInterface.php">RegistrationFormHandlerInterface</a>. So if you want to add your custom handler you have to extend the handler to implement <code>RegistrationFormHandlerInterface</code>.</p>
+
+<p>The value of <code>registration_form</code> is same as default <code>FOSUserBundle</code> registration form <code>fos_user.registration.form</code>. It is used during registration operation. The twig template of the registration file is at <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/views/Connect/registration.html.twig">HWIOAuthBundle:Connect:registration.html.twig</a>. Override it to meet your requirement.</p>
+
+<p>Then issue following commands which will generate entity setter/getter methods and save table information to DB.</p>
+
+<figure class='code'><figcaption><span>command </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> php app/console doctrine:generate:entities YourVendorYourBundle
+</span><span class='line'> php app/console doctrine:schema:update --force
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thats all. Now go to any url matcing <code>^/sceure_area</code> pattern and you will be redirected to <code>/secure_area/connect</code> url where lists of OAuth resource owners will be shown. The twig template of the page is <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/views/Connect/login.html.twig">HWIOAuthBundle:Connect:login.html.twig</a>. Override it to meet your requirement. After successful OAuth authentication new user will be redirected to registration page or to previous page if the user already exists.</p>
+
+<p>Once first resource owner is configured adding other resource owners is very easy. Just add mapping resource owners field in the entity, add check-resource route on <code>app/config/routng.yml</code>, add client id and client secret to <code>app/config/config.yml</code>, add property mapping and add another line in <code>resource_owners</code> section of the <code>app/config/security.yml</code>.</p>
+
+<p>Another bonus tip, After successful authentication you can get access token of the resource from the toke of the <code>security.context</code> service as <code>HWIOAuthBundle</code> sets <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Security/Core/Authentication/Token/OAuthToken.php#L22">OAuthToken</a> after successful authentication. So just by adding following line</p>
+
+<figure class='code'><figcaption><span>YourController.php </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'>    <span class="nv">$accessToken</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;security.context&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getToken</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getAccessToken</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>will give you the access token with which you can do REST API call to the resource.</p>
+
+<p>I have combined code example of this post and my <a href="http://m2mdas.github.io/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/">previous post</a> and uploaded to <a href="https://github.com/m2mdas/MinimalSecurityBundlesSetup">Github</a>. It integrates <code>FOSUserBundle</code>, <code>SonataAdminBundle</code>, <code>SonataUserBundle</code> and <code>HWIOAuthBundle</code>. Enjoy.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -437,6 +919,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/">Integrate HWIOAuthBundle With FOSUserBundle</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/">Integrate FOSUserBundle and SonataUserBundle Easily</a>
       </li>
     
@@ -471,7 +957,7 @@
 
         github.showRepos({
             user: 'm2mdas',
-            count: 4,
+            count: 5,
             skip_forks: true,
             target: '#gh_repos'
         });

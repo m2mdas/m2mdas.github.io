@@ -1,24 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[]]></title>
-  <link href="http://m2mdas.github.io/atom.xml" rel="self"/>
-  <link href="http://m2mdas.github.io/"/>
-  <updated>2013-11-22T14:17:45+06:00</updated>
-  <id>http://m2mdas.github.io/</id>
-  <author>
-    <name><![CDATA[Mun Mun Das]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Integrate HWIOAuthBundle with FOSUserBundle - </title>
+  <meta name="author" content="Mun Mun Das">
 
   
-  <entry>
-    <title type="html"><![CDATA[Integrate HWIOAuthBundle with FOSUserBundle]]></title>
-    <link href="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/"/>
-    <updated>2013-11-21T20:22:00+06:00</updated>
-    <id>http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/hwi/HWIOAuthBundle">HWIOAuthBundle</a> is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can configured you can add infinite amount of web services as authentication source.</p>
+  <meta name="description" content="Integrate HWIOAuthBundle with FOSUserBundle">
+  <meta name="keywords" content="PHP, Symfony2, FOSUserBundle, HWIOAuthBundle, configure FOSUserBundle and HWIOAuthBundle, setup, integrate">
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45815026-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/"></a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:m2mdas.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Integrate HWIOAuthBundle With FOSUserBundle</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-21T20:22:00+06:00" pubdate data-updated="true">Nov 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="https://github.com/hwi/HWIOAuthBundle">HWIOAuthBundle</a> is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can configured you can add infinite amount of web services as authentication source.</p>
 
 <p>After user authentication it is better to fetch user information from the web service and store them to local DB to add profile information so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure <code>HWIOAuthBundle</code> and integrate <code>FOSUserBundle</code> user provider using <code>fosub_bridge</code> implemented in <code>HWIOauthBundle</code>. For web service Github OAuth api used.</p>
 
@@ -465,326 +550,170 @@
 <p>will give you the access token with which you can do REST API call to the resource.</p>
 
 <p>I have combined code example of this post and my <a href="http://m2mdas.github.io/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/">previous post</a> and uploaded to <a href="https://github.com/m2mdas/MinimalSecurityBundlesSetup">Github</a>. It integrates <code>FOSUserBundle</code>, <code>SonataAdminBundle</code>, <code>SonataUserBundle</code> and <code>HWIOAuthBundle</code>. Enjoy.</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Integrate FOSUserBundle and SonataUserBundle easily]]></title>
-    <link href="http://m2mdas.github.io/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/"/>
-    <updated>2013-11-18T05:41:00+06:00</updated>
-    <id>http://m2mdas.github.io/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/sonata-project/SonataUserBundle">SonataUserBundle</a> is a great extension of <a href="https://github.com/sonata-project/SonataAdminBundle">SonataAdminBundle</a> that provides user administration features by integrating <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a> user provider/management bundle. Its <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Resources/doc/reference/installation.rst#installation">default installation procedure</a> recommends to setup <code>SonataUserBundle</code> as child bundle of <code>FOSUserBundle</code> and generate <code>ApplicationSonataUserBundle</code> via <code>sonata:easy-extends:generate</code> command. But on some cases you may not want to setup that way. For example you have setup your user entity by following the documentation of <code>FOSUserBundle</code> before integrating <code>SonataAdminBundle</code> and <code>SonataUserBundle</code>, you may want to override both bundles separately.  In following section I will outline how to integrate <code>SonataUserBundle</code> with <code>FOSUserBundle</code> without creating child bundle of <code>FOSUserBundle</code>.</p>
 
-<p>Default installation and setup of <code>FOSUserBundle</code> is same as <a href="https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md#getting-started-with-fosuserbundle">stated in default documentation</a>. Then install and setup <code>SonataAdminBundle</code> <a href="http://sonata-project.org/bundles/admin/master/doc/index.html#reference-guide">according to its documentation</a>. Both guides are pretty well documented. So I will not duplicate them here.</p>
+<span class="byline author vcard">Posted by <span class="fn">Mun Mun Das</span></span>
 
-<p>Now setup <code>SonataUserBundle</code>. Add it to <code>composer.json</code> and add following line into <code>registerBundle</code> method of <code>app/AppKernel.php</code></p>
-
-<figure class='code'><figcaption><span>app/AppKernel.php </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">// app/AppKernel.php</span>
-</span><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">registerBundles</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nv">$bundles</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="c1">// other bundle declarations</span>
-</span><span class='line'>        <span class="k">new</span> <span class="nx">Sonata\UserBundle\SonataUserBundle</span><span class="p">(),</span>
-</span><span class='line'>    <span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+      
 
 
-<p>Then setup configuration, add routing and security configuration according to <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Resources/doc/reference/installation.rst#configuration">the documentation</a>.</p>
-
-<p>Now set value of <code>sonata.user.admin.user.class</code> parameter to the FQCN of the User entity which was created during <code>FOSUserBundle</code> setup. For example if FQCN of your user entity is <code>YourVendor\YourBundle\Entity\User</code> then parameter setting of <code>app/config.yml</code> would be</p>
-
-<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">parameters</span><span class="p">:</span>
-</span><span class='line'>    <span class="c1">#....</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">entity</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Entity</span><span class="p">\</span><span class="no">User</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now create a class that extends default <a href="https://github.com/sonata-project/SonataUserBundle/blob/master/Admin/Model/UserAdmin.php">UserAdmin</a> class and override <code>configureShowFields</code>, <code>configureFormFields</code>, <code>configureDatagridFilters</code> and <code>configureListFields</code> methods to add the needed user admin fields. Following is the sample extended <code>UserAdmin</code> class which is based on the bare bone user entity created in <code>FOSUserBundle</code> documentation.</p>
-
-<figure class='code'><figcaption><span>src/YourVendor/YourBundle/Admin/UserAdmin.php  </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="c1">//src/YourVendor/YourBundle/Admin/UserAdmin.php</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">namespace</span> <span class="nx">YourVendor\YourBundle\Admin</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\UserBundle\Admin\Model\UserAdmin</span> <span class="k">as</span> <span class="nx">BaseUserAdmin</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Form\FormMapper</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Datagrid\DatagridMapper</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Datagrid\ListMapper</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Show\ShowMapper</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">use</span> <span class="nx">FOS\UserBundle\Model\UserManagerInterface</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Sonata\AdminBundle\Route\RouteCollection</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">UserAdmin</span> <span class="k">extends</span> <span class="nx">BaseUserAdmin</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureShowFields</span><span class="p">(</span><span class="nx">ShowMapper</span> <span class="nv">$showMapper</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$showMapper</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;General&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
-</span><span class='line'>            <span class="c1">// .. more info</span>
-</span><span class='line'>        <span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureFormFields</span><span class="p">(</span><span class="nx">FormMapper</span> <span class="nv">$formMapper</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nv">$formMapper</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;General&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;plainPassword&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
-</span><span class='line'>            <span class="c1">// .. more info</span>
-</span><span class='line'>            <span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getSubject</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasRole</span><span class="p">(</span><span class="s1">&#39;ROLE_SUPER_ADMIN&#39;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$formMapper</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;Management&#39;</span><span class="p">)</span>
-</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">,</span> <span class="s1">&#39;sonata_security_roles&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>                        <span class="s1">&#39;expanded&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;multiple&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span>
-</span><span class='line'>                    <span class="p">))</span>
-</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
-</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;expired&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
-</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
-</span><span class='line'>                    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;credentialsExpired&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">))</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">end</span><span class="p">()</span>
-</span><span class='line'>            <span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureDatagridFilters</span><span class="p">(</span><span class="nx">DatagridMapper</span> <span class="nv">$filterMapper</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$filterMapper</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * {@inheritdoc}</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">configureListFields</span><span class="p">(</span><span class="nx">ListMapper</span> <span class="nv">$listMapper</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$listMapper</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">addIdentifier</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;editable&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">))</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;editable&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">))</span>
-</span><span class='line'>            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;createdAt&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isGranted</span><span class="p">(</span><span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$listMapper</span>
-</span><span class='line'>                <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;impersonating&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;template&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;SonataUserBundle:Admin:Field/impersonating.html.twig&#39;</span><span class="p">))</span>
-</span><span class='line'>            <span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now set the value of <code>sonata.user.admin.user.class</code> to the FQCN of the created <code>UserAdmin</code> class in <code>app/config/config.yml</code>, e.g</p>
-
-<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
-</span><span class='line'>
-</span><span class='line'><span class="ss">parameters</span><span class="p">:</span>
-</span><span class='line'>    <span class="c1"># ...</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">class</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Admin</span><span class="p">\</span><span class="no">UserAdmin</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># ....</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you don&rsquo;t need user group functionality you can disable it. e.g in your <code>app/config/config.yml</code> add following lines.</p>
-
-<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
-</span><span class='line'>
-</span><span class='line'><span class="ss">services</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
-</span><span class='line'>        <span class="ss">abstract</span><span class="p">:</span> <span class="kp">true</span>
-</span><span class='line'>        <span class="kp">public</span><span class="p">:</span> <span class="kp">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Combined <code>config.yml</code> setting given bellow,</p>
-
-<figure class='code'><figcaption><span>app/config/config.yml </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#app/config/config.yml</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#...</span>
-</span><span class='line'>
-</span><span class='line'><span class="ss">parameters</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">class</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Admin</span><span class="p">\</span><span class="no">UserAdmin</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">entity</span><span class="p">:</span> <span class="no">YourVendor</span><span class="p">\</span><span class="no">YourBundle</span><span class="p">\</span><span class="no">Entity</span><span class="p">\</span><span class="no">User</span>
-</span><span class='line'>
-</span><span class='line'><span class="ss">services</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">sonata</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
-</span><span class='line'>        <span class="ss">abstract</span><span class="p">:</span> <span class="kp">true</span>
-</span><span class='line'>        <span class="kp">public</span><span class="p">:</span> <span class="kp">false</span>
-</span><span class='line'><span class="c1">#...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If everything setup correctly you will see an new users row in <code>admin/dashboard</code> page. All user operations should work as expected. Thats all for now.</p>
-]]></content>
-  </entry>
   
-</feed>
+
+
+<time datetime="2013-11-21T20:22:00+06:00" pubdate data-updated="true">Nov 21<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/fosuserbundle/'>FOSUserBundle</a>, <a class='category' href='/blog/categories/hwioauthbundle/'>HWIOAuthBundle</a>, <a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/symfony/'>Symfony</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/" data-via="m2mdas" data-counturl="http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/" title="Previous Post: Integrate FOSUserBundle and SonataUserBundle easily">&laquo; Integrate FOSUserBundle and SonataUserBundle easily</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/">Integrate HWIOAuthBundle With FOSUserBundle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/18/integrate-fosuserbundle-and-sonatauserbundle-easily/">Integrate FOSUserBundle and SonataUserBundle Easily</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Stack Overflow</h1>
+  <a href="http://stackoverflow.com/users/1218997/m2mdas">
+  <img src="http://stackoverflow.com/users/flair/1218997.png" width="208" height="58" alt="profile for m2mdas at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for m2mdas at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+  </a>
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/m2mdas">@m2mdas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'm2mdas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Mun Mun Das -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'm2mdas';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/';
+        var disqus_url = 'http://m2mdas.github.io/blog/2013/11/21/integrate-hwioauthbundle-with-fosuserbundle/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
