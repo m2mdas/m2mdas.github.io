@@ -7,9 +7,9 @@ categories: [PHP, Symfony, FOSUserBundle, HWIOAuthBundle]
 description: Integrate HWIOAuthBundle with FOSUserBundle
 keywords: PHP, Symfony2, FOSUserBundle, HWIOAuthBundle, configure FOSUserBundle and HWIOAuthBundle, setup, integrate
 ---
-[HWIOAuthBundle](https://github.com/hwi/HWIOAuthBundle) is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can configured you can add infinite amount of web services as authentication source.
+[HWIOAuthBundle](https://github.com/hwi/HWIOAuthBundle) is a great Symfony2 bundle that provides way to integrate web services that implements OAuth1.0 and OAuth2 as user authentication system. Once configured you can add infinite amount of web services as authentication source.
 
-After user authentication it is better to fetch user information from the web service and store them to local DB to add profile information so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure `HWIOAuthBundle` and integrate `FOSUserBundle` user provider using `fosub_bridge` implemented in `HWIOauthBundle`. For web service Github OAuth api used.
+After user authentication it is better to fetch user information from the web service and store them in DB so that the user does not have to input profile information again. In following section I will outline step by step instruction on how to configure `HWIOAuthBundle` and integrate `FOSUserBundle` user provider using `fosub_bridge` implemented in `HWIOauthBundle`. For web service Github OAuth api used.
 
 `HWIOAuthBundle` uses [Buzz](https://github.com/kriswallsmith/Buzz) curl client to communicate with web services. `Buzz` by default enables SSL certificate check. On some server CA certificate information may not exist. To add CA certificate info download  `cacert.pem` from [this](http://curl.haxx.se/docs/caextract.html) page and set `curl.cainfo` php ini variable to the location of `cacert.pem` e.g
 
@@ -21,7 +21,7 @@ Then register application of the web service you want to use for authentication.
 
 {% img http://i.imgur.com/bfOhYma.png?2 %}
 
-After successful application creation you will be redirected to application page where will see `client ID` and `Client Secret` fields set for the application. They will be used later.
+After successful application creation you will be redirected to application page where you will see `client ID` and `Client Secret` fields set for the application. They will be used later.
 
 Add the bundle info in `composer.json` and issue `php composer.phar update --prefer-dist` command.
 
@@ -284,7 +284,7 @@ Once first resource owner is configured adding other resource owners is very eas
 Another bonus tip, After successful authentication you can get access token of the resource from the toke of the `security.context` service as `HWIOAuthBundle` sets [OAuthToken](https://github.com/hwi/HWIOAuthBundle/blob/master/Security/Core/Authentication/Token/OAuthToken.php#L22) after successful authentication. So just by adding following line
 
 {% codeblock YourController.php lang:php %}
-    $accessToken = $this->get('security.context')->getToken()->getAccessToken();
+$accessToken = $this->get('security.context')->getToken()->getAccessToken();
 {% endcodeblock %}
 
 will give you the access token with which you can do REST API call to the resource.
