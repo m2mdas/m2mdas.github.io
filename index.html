@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
@@ -538,7 +537,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Thats all. Now go to any url matcing <code>^/sceure_area</code> pattern and you will be redirected to <code>/secure_area/connect</code> url where lists of OAuth resource owners will be shown. The twig template of the page is <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/views/Connect/login.html.twig">HWIOAuthBundle:Connect:login.html.twig</a>. Override it to meet your requirement. After successful OAuth authentication new user will be redirected to registration page or to previous page if the user already exists.</p>
+<p>Thats all. Now go to any url matcing <code>^/secure_area</code> pattern and you will be redirected to <code>/secure_area/connect</code> url where lists of OAuth resource owners will be shown. The twig template of the page is <a href="https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/views/Connect/login.html.twig">HWIOAuthBundle:Connect:login.html.twig</a>. Override it to meet your requirement. After successful OAuth authentication new user will be redirected to registration page or to previous page if the user already exists.</p>
 
 <p>Once first resource owner is configured adding other resource owners is very easy. Just add mapping resource owners field in the entity, add check-resource route on <code>app/config/routng.yml</code>, add client id and client secret to <code>app/config/config.yml</code>, add property mapping and add another line in <code>resource_owners</code> section of the <code>app/config/security.yml</code>.</p>
 
